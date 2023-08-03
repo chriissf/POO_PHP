@@ -3,9 +3,9 @@
 class ContaBanco
 {
 
-    public $numeroConta;
+    public $numConta;
 
-    protected $tipoContaBanco;
+    protected $tipo;
 
     private $dono;
 
@@ -16,86 +16,94 @@ class ContaBanco
     public function __construct()
     {
 
-        $this->saldo = 0;
-        $this->status = false;
+        $this->setSaldo(0);
+        $this->setStatus(false);
+        echo "<p>Conta criada com sucesso</p>";
     }
 
 
-    public function abrirContaBanco($t)
+    public function abrirConta($t)
     {
+        $this->setTipo($t);
+        $this->setStatus(true);
         if ($t == "cc") {
-            $this->tipoContaBanco = "cc";
-            $this->saldo = 50;
+            $this->setSaldo(50);
         } else if ($t == "cp") {
-            $this->tipoContaBanco = "cp";
-            $this->saldo = 150;
+            $this->setSaldo(150);
         }
     }
-    public function fecharContaBanco()
+    public function fecharConta()
     {
-        if ($this->saldo == 0) {
+        if ($this->getSaldo() == 0) {
             $this->status = false;
+            echo "<p>Conta encerrada com sucesso!</p>";
+        } else if ($this->getSaldo() < 0) {
+            echo "<p>Conta em Debito, impossível encerrar conta!</p>";
         } else {
-            echo "Você não pode fechar sua conta,favor retirar todo seu dinheiro!";
+            echo "<p>Você não pode fechar sua conta,favor retirar todo seu dinheiro!</p>";
         }
     }
     public function depositar($valor)
     {
-        if ($this->status) {
-            $this->saldo += $valor;
-            echo "Deposito de $valor feito com sucesso!";
+        if ($this->getStatus()) {
+            $this->setSaldo($this->getSaldo() + $valor);
+            echo "<p>Deposito de $valor na conta: " . $this->getDono() . "</p>";
         } else {
-            echo "Impossível efetuar o deposito ,sua conta está fechada!";
+            echo "<p>Impossível efetuar o deposito ,sua conta está fechada!</p>";
         }
     }
     public function sacar($valor)
     {
-        if ($this->status && $this->saldo >= $valor) {
-            $this->saldo -= $valor;
-            echo "Saque de $valor realizado com Sucesso!";
+        if ($this->getStatus()) {
+            if ($this->getSaldo() >= $valor) {
+                $this->setSaldo($this->getSaldo() - $valor);
+                echo "<p>Saque de $valor realizado com Sucesso  na Conta de: " . $this->getDono() . "</p>";
+            } else {
+                echo "<p>Saque não autorizado,Valor insuficiente para saque!</p>";
+            }
         } else {
-            echo "Saque não autorizado,Valor insuficiente!seu saldo é : $this->saldo";
+            echo "<p>Sua conta está fechada,impossível sacar</p>";
         }
     }
     public function pagarMensalidade()
     {
         if ($this->status) {
-            if ($this->tipoContaBanco == "cc") {
+            if ($this->getTipo() == "cc") {
                 $mensalidade = 12;
-            } else if ($this->tipoContaBanco == "cp") {
+            } else if ($this->getTipo() == "cp") {
                 $mensalidade = 20;
             }
-            if ($this->saldo >= $mensalidade) {
-                $this->saldo -= $mensalidade;
-                echo " Mensalidade de $mensalidade paga com sucesso!";
+            if ($this->getSaldo() >= $mensalidade) {
+                $this->SetSaldo($this->getSaldo() - $mensalidade);
+                echo " <p>Mensalidade de $mensalidade reais paga com sucesso,Dados da conta: Numero da conta: " . $this->getNumConta() . " </br> " . $this->getDono() . " Seu saldo é " . $this->getSaldo() . " reais." . "</p>";
             } else {
-                echo "saldo insuficiente para pagar a mensalidade.";
+                echo "<p>saldo insuficiente para pagar a mensalidade</p>";
             }
         } else {
-            echo "Sua conta está fechada!";
+            echo "<p>Sua conta está fechada </p>";
         }
     }
 
-    public function setNumeroConta($n)
+    public function setNumConta($n)
     {
-        $this->numeroConta = $n;
+        $this->numConta = $n;
     }
 
-    public function getNumeroConta()
+    public function getNumConta()
     {
-        return $this->numeroConta;
-    }
-
-
-    public function getTipoContaBanco()
-    {
-        return $this->tipoContaBanco;
+        return $this->numConta;
     }
 
 
-    public function setTipoContaBanco($tipo)
+    public function getTipo()
     {
-        $this->tipoContaBanco = $tipo;
+        return $this->tipo;
+    }
+
+
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
     }
 
 
